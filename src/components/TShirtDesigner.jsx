@@ -7,7 +7,6 @@ const TShirtDesigner = () => {
   const designRef = useRef(null);
   const dropZoneRef = useRef(null);
 
-  // Utility function to combine refs
   const setCombinedRefs = (el) => {
     designRef.current = el;
     dropZoneRef.current = el;
@@ -24,7 +23,18 @@ const TShirtDesigner = () => {
 
   const handleDownload = async () => {
     if (designRef.current) {
-      const canvas = await html2canvas(designRef.current, { useCORS: true });
+      const designWidth = designRef.current.offsetWidth;
+      const designHeight = designRef.current.offsetHeight;
+
+      const canvas = await html2canvas(designRef.current, {
+        useCORS: true,
+        width: designWidth,
+        height: designHeight,
+        x: 0,
+        y: 0,
+        scale: 1,
+      });
+
       const link = document.createElement("a");
       link.download = "tshirt-design.png";
       link.href = canvas.toDataURL("image/png");
@@ -35,20 +45,20 @@ const TShirtDesigner = () => {
   const handleDragOver = (e) => {
     e.preventDefault();
     if (dropZoneRef.current) {
-      dropZoneRef.current.style.borderColor = "#4CAF50"; // Highlight border
+      dropZoneRef.current.style.borderColor = "#4CAF50";
     }
   };
 
   const handleDragLeave = () => {
     if (dropZoneRef.current) {
-      dropZoneRef.current.style.borderColor = "#e5e7eb"; // Reset border
+      dropZoneRef.current.style.borderColor = "#e5e7eb";
     }
   };
 
   const handleDrop = (e) => {
     e.preventDefault();
     if (dropZoneRef.current) {
-      dropZoneRef.current.style.borderColor = "#e5e7eb"; // Reset border
+      dropZoneRef.current.style.borderColor = "#e5e7eb";
     }
     handleLogoUpload(e);
   };
@@ -58,7 +68,6 @@ const TShirtDesigner = () => {
       <h1 className="text-2xl font-bold">T-Shirt Designer</h1>
 
       <div className="flex flex-col lg:flex-row items-center space-y-4 gap-10 relative">
-        {/* T-Shirt Design Section */}
         <div
           ref={setCombinedRefs}
           className="relative w-72 h-96 bg-white shadow-xl rounded overflow-hidden border border-gray-300"
@@ -91,7 +100,6 @@ const TShirtDesigner = () => {
             </Rnd>
           )}
 
-          {/* Dropzone Overlay */}
           {!logo && (
             <div className="absolute inset-0 flex items-center justify-center bg-gray-50 bg-opacity-75 border-2 border-dashed border-gray-300 text-gray-500">
               Drag and Drop Logo Here
@@ -99,7 +107,6 @@ const TShirtDesigner = () => {
           )}
         </div>
 
-        {/* Upload and Download Buttons */}
         <div className="flex flex-col gap-4">
           <label className="px-4 py-2 bg-blue-500 text-white rounded cursor-pointer hover:bg-blue-600 text-center">
             Upload Logo
